@@ -1,3 +1,10 @@
+# Intro
+
+This is a notion statistics website for everybody who want to know how is the page or database changes, 
+now Notion Statistics provide daily(or weekly or all) summary of your notion page.  
+
+You can find this website at [https://notion-statistics.top](https://notion-statistics.top)
+
 # Demo
 
 ![Demo](https://github.com/Helio609/notion_statistics/blob/main/images/demo.png?raw=true)
