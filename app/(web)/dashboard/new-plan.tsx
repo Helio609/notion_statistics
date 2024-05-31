@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label'
 import { createClient } from '@/utils/supabase/client'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export function NewPlan() {
@@ -23,9 +23,33 @@ export function NewPlan() {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
 
+  const supabase = createClient()
+
+  useEffect(() => {
+    const updateNotionAuth = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (!user) return
+
+      const { data } = await supabase
+        .from('plans')
+        .select('notion_auth')
+        .eq('user_id', user.id)
+        .limit(1)
+        .maybeSingle()
+
+      if (data?.notion_auth) {
+        setNotionAuth(data.notion_auth)
+      }
+    }
+
+    updateNotionAuth()
+  }, [supabase])
+
   const handleNewPlan = useCallback(async () => {
     setLoading(true)
-    const supabase = createClient()
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -47,7 +71,7 @@ export function NewPlan() {
     }
 
     toast.info('Created')
-  }, [notionAuth, root])
+  }, [notionAuth, root, supabase])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -59,18 +83,20 @@ export function NewPlan() {
           <DialogTitle>New plan</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="notion_auth" className="text-right">
-              <sup>*</sup>
-              Notion_Auth
-            </Label>
-            <Input
-              onBlur={(v) => setNotionAuth(v.target.value)}
-              id="notion_auth"
-              className="col-span-3"
-              placeholder="secret_xxxxxx"
-            />
-          </div>
+          {!notionAuth && (
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="notion_auth" className="text-right">
+                <sup>*</sup>
+                Secret
+              </Label>
+              <Input
+                onBlur={(v) => setNotionAuth(v.target.value)}
+                id="notion_auth"
+                className="col-span-3"
+                placeholder="secret_xxxxxx"
+              />
+            </div>
+          )}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="root" className="text-right">
               Root
@@ -84,14 +110,16 @@ export function NewPlan() {
           </div>
         </div>
         <DialogFooter>
-          <div className="flex flex-col mr-auto space-y-2">
-            <Link
-              href="https://www.notion.so/my-integrations"
-              className="text-sm underline"
-              target="_blank"
-            >
-              <sup>*</sup>Create a Notion Integration First?
-            </Link>
+          <div className="flex flex-col mr-auto space-y-2 sm:mt-0 mt-4">
+            {!notionAuth && (
+              <Link
+                href="https://www.notion.so/my-integrations"
+                className="text-sm underline"
+                target="_blank"
+              >
+                <sup>*</sup>Create a Notion Integration First?
+              </Link>
+            )}
             <Link
               href="https://developers.notion.com/reference/intro"
               className="text-sm underline"
