@@ -15,7 +15,7 @@ export default async function Header() {
       <div className="container flex h-14 max-w-screen-2xl items-center">
         <a href="/" className="mr-6 flex items-center space-x-2">
           <BarChartBig className="w-6 h-6" />
-          <span className="font-bold">Notion Statistics</span>
+          <span className="font-bold text-xs">Notion Statistics</span>
         </a>
         <div className="flex flex-1 items-center space-x-2 justify-end">
           {!user ? (

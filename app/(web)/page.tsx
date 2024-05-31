@@ -5,7 +5,7 @@ export default function Home() {
 
   return (
     <div className="container py-6 space-y-8">
-      <h1 className="text-2xl text-center md:text-4xl">
+      <h1 className="text-xl text-center md:text-4xl">
         <span className="underline decoration-indigo-500 decoration-4">
           Statistics
         </span>{' '}
@@ -14,16 +14,16 @@ export default function Home() {
 
       <h2 className="text-3xl decoration-sky-500 underline">Banner</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="w-full h-36">
+        <div className="w-full flex">
           <Banner planId={planId} blockCnt />
         </div>
-        <div className="w-full h-36">
+        <div className="w-full flex">
           <Banner planId={planId} wordCnt />
         </div>
-        <div className="w-full h-60">
+        <div className="w-full flex">
           <Banner planId={planId} blockCnt wordCnt />
         </div>
-        <div>
+        <div className='w-full flex'>
           <Banner planId={planId} />
         </div>
       </div>
