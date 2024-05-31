@@ -1,18 +1,22 @@
 'use client'
 
-import Banner from '@/components/statistics/banner'
+import Banner2 from '@/components/statistics/banner2'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-export default function DashboardBanner({ planId }: { planId: string }) {
+export default function DashboardBanner2({ planId }: { planId: string }) {
   const [blockCnt, setBlockCnt] = useState(true)
   const [wordCnt, setWordCnt] = useState(true)
+  const [daysAgo, setDaysAgo] = useState(1)
 
   const handleCopy = () => {
-    const baseUrl = `${window.location.origin}/statistics/${planId}/banner`
+    const baseUrl = `${window.location.origin}/statistics/${planId}/banner2`
     const params = new URLSearchParams()
+
+    params.append('daysAgo', daysAgo.toString())
 
     if (blockCnt) {
       params.append('blockCnt', blockCnt.toString())
@@ -36,9 +40,18 @@ export default function DashboardBanner({ planId }: { planId: string }) {
 
   return (
     <>
-      <Banner planId={planId} blockCnt={blockCnt} wordCnt={wordCnt} />
+      <Banner2
+        planId={planId}
+        blockCnt={blockCnt}
+        wordCnt={wordCnt}
+        daysAgo={daysAgo}
+      />
       <div className="flex space-x-2">
-        <ToggleGroup defaultValue={['block', 'word']} type="multiple" onValueChange={(v) => console.log(v)}>
+        <ToggleGroup
+          defaultValue={['block', 'word']}
+          type="multiple"
+          onValueChange={(v) => console.log(v)}
+        >
           <ToggleGroupItem
             value="block"
             variant="outline"
@@ -54,6 +67,12 @@ export default function DashboardBanner({ planId }: { planId: string }) {
             Word
           </ToggleGroupItem>
         </ToggleGroup>
+        <Input
+          placeholder="Days ago(default 1 day)"
+          className="w-56"
+          onBlur={(v) => setDaysAgo(Number(v.target.value) || 1)}
+          type="number"
+        />
         <Button onClick={handleCopy}>Copy</Button>
       </div>
     </>

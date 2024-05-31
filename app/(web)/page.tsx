@@ -1,4 +1,5 @@
 import Banner from '@/components/statistics/banner'
+import Banner2 from '@/components/statistics/banner2'
 
 export default function Home() {
   const planId = 'e9f34b2e-9534-4db6-ac59-dfdca294e0f2'
@@ -21,16 +22,18 @@ export default function Home() {
           <Banner planId={planId} wordCnt />
         </div>
         <div className="w-full flex">
-          <Banner planId={planId} blockCnt wordCnt />
+          <Banner2 planId={planId} blockCnt daysAgo={1} />
         </div>
-        <div className='w-full flex'>
-          <Banner planId={planId} />
+        <div className="w-full flex">
+          <Banner2 planId={planId} wordCnt daysAgo={1} />
         </div>
       </div>
 
       <hr />
 
-      <h2 className="text-2xl decoration-sky-500 underline text-center">More is coming</h2>
+      <h2 className="text-2xl decoration-sky-500 underline text-center">
+        More is coming
+      </h2>
     </div>
   )
 }
