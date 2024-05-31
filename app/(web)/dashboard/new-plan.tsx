@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createClient } from '@/utils/supabase/client'
 import { Loader2 } from 'lucide-react'
+import Link from 'next/link'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -49,7 +50,7 @@ export function NewPlan() {
   }, [notionAuth, root])
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button onClick={() => setOpen(true)}>Add new plan</Button>
       </DialogTrigger>
@@ -60,6 +61,7 @@ export function NewPlan() {
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="notion_auth" className="text-right">
+              <sup>*</sup>
               Notion_Auth
             </Label>
             <Input
@@ -82,6 +84,22 @@ export function NewPlan() {
           </div>
         </div>
         <DialogFooter>
+          <div className="flex flex-col mr-auto space-y-2">
+            <Link
+              href="https://www.notion.so/my-integrations"
+              className="text-sm underline"
+              target="_blank"
+            >
+              <sup>*</sup>Create a Notion Integration First?
+            </Link>
+            <Link
+              href="https://developers.notion.com/reference/intro"
+              className="text-sm underline"
+              target="_blank"
+            >
+              What is Root?
+            </Link>
+          </div>
           <Button type="submit" onClick={handleNewPlan} disabled={loading}>
             {loading ? <Loader2 className="animate-spin" /> : 'Add'}
           </Button>
