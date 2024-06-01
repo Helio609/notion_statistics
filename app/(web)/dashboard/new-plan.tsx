@@ -14,10 +14,13 @@ import { Label } from '@/components/ui/label'
 import { createClient } from '@/utils/supabase/client'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export function NewPlan() {
+  const router = useRouter()
+
   const [notionAuth, setNotionAuth] = useState<string | null>(null)
   const [root, setRoot] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -71,7 +74,10 @@ export function NewPlan() {
     }
 
     toast.info('Created')
-  }, [notionAuth, root, supabase])
+    setTimeout(() => {
+      router.refresh()
+    }, 2000)
+  }, [notionAuth, root, supabase, router])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

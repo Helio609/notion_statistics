@@ -1,14 +1,22 @@
 'use client'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from '@/components/ui/select'
 import { createClient } from '@/utils/supabase/client'
 import { Loader2 } from 'lucide-react'
@@ -17,7 +25,15 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { NewPlan } from './new-plan'
 
-export default function PlanSelect({ data }: { data: { id: string, title: string }[] }) {
+export default function PlanSelect({
+  data,
+  error,
+  message,
+}: {
+  data: { id: string; title: string }[]
+  error: boolean
+  message?: string
+}) {
   const [planId, setPlanId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -59,21 +75,39 @@ export default function PlanSelect({ data }: { data: { id: string, title: string
 
   return (
     <div className="flex items-center space-x-2">
-      <Select
-        onValueChange={(v) => setPlanId(v)}
-        defaultValue={searchParams.get('planId')?.toString()}
-      >
-        <SelectTrigger className="w-[320px]">
-          <SelectValue placeholder="Select a Plan" />
-        </SelectTrigger>
-        <SelectContent>
+      {!error && (
+        <Select
+          onValueChange={(v) => setPlanId(v)}
+          defaultValue={searchParams.get('planId')?.toString()}
+        >
+          <SelectTrigger className="w-[320px]">
+            <SelectValue placeholder="Select a Plan" />
+          </SelectTrigger>
+          <SelectContent>
             {data?.map((v) => (
               <SelectItem value={v.id} key={v.id}>
                 {v.title}
               </SelectItem>
             ))}
-        </SelectContent>
-      </Select>
+          </SelectContent>
+        </Select>
+      )}
+      {error && (
+        <AlertDialog defaultOpen>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Warning</AlertDialogTitle>
+              <AlertDialogDescription>
+                {message}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
       {planId && (
         <Button
           variant="destructive"

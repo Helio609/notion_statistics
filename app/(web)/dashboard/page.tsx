@@ -15,16 +15,23 @@ export default async function DashboardPage() {
   })
 
   let plans = []
+  let error = false
+  let message
 
   if (data) {
     for (let item of data) {
-      const block = await notion.blocks.retrieve({ block_id: item.root_id })
-      if (block) {
-        if ('child_page' in block) {
-          plans.push({ id: item.id, title: block['child_page']['title'] })
-        } else if ('child_database' in block) {
-          plans.push({ id: item.id, title: block['child_database']['title'] })
+      try {
+        const block = await notion.blocks.retrieve({ block_id: item.root_id })
+        if (block) {
+          if ('child_page' in block) {
+            plans.push({ id: item.id, title: block['child_page']['title'] })
+          } else if ('child_database' in block) {
+            plans.push({ id: item.id, title: block['child_database']['title'] })
+          }
         }
+      } catch (e) {
+        error = true
+        message = 'Please connect your integration to your page or database'
       }
     }
   }
@@ -32,7 +39,7 @@ export default async function DashboardPage() {
   return (
     <div className="container mt-10 space-y-4">
       <div className="flex space-x-2">
-        <PlanSelect data={plans || []} />
+        <PlanSelect data={plans || []} error={error} message={message} />
         <Link href="/help">
           <Button variant="outline">
             <HelpCircle className="w-5 h-5 animate-pulse" />
