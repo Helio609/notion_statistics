@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { NewPlan } from './new-plan'
 
-export default function PlanSelect({ data }: { data: { id: string }[] }) {
+export default function PlanSelect({ data }: { data: { id: string, title: string }[] }) {
   const [planId, setPlanId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -67,14 +67,11 @@ export default function PlanSelect({ data }: { data: { id: string }[] }) {
           <SelectValue placeholder="Select a Plan" />
         </SelectTrigger>
         <SelectContent>
-          <SelectGroup>
-            <SelectLabel>UUID</SelectLabel>
             {data?.map((v) => (
               <SelectItem value={v.id} key={v.id}>
-                {v.id}
+                {v.title}
               </SelectItem>
             ))}
-          </SelectGroup>
         </SelectContent>
       </Select>
       {planId && (

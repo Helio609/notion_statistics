@@ -18,7 +18,7 @@ export default function Dashboard() {
       {planId && (
         <div className="flex flex-col space-y-4">
           <h2 className="text-3xl decoration-sky-500 underline">Banner</h2>
-          <div className="flex flex-col space-y-2">
+          <div key={planId} className="flex flex-col space-y-2">
             <DashboardBanner planId={planId} />
             <DashboardBanner2 planId={planId} />
           </div>

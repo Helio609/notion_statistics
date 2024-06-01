@@ -21,6 +21,7 @@ export default function Banner({ planId, blockCnt, wordCnt }: BannerProps) {
   })
   const [error, setError] = useState<PostgrestError | null>(null)
   const [loading, setLoading] = useState(true)
+  const [nothing, setNothing] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -43,6 +44,8 @@ export default function Banner({ planId, blockCnt, wordCnt }: BannerProps) {
           words: data.words,
           created_at: created_at,
         })
+      } else {
+        setNothing(true)
       }
       setLoading(false)
     }
@@ -56,6 +59,10 @@ export default function Banner({ planId, blockCnt, wordCnt }: BannerProps) {
 
   if (error) {
     return <Error message={error.message} />
+  }
+
+  if (nothing) {
+    return <Error message="Nothing to show, wait a second" />
   }
 
   return (
@@ -86,10 +93,12 @@ export default function Banner({ planId, blockCnt, wordCnt }: BannerProps) {
               words
             </p>
           )}
-          <p className="text-sm font-mono text-muted-foreground">{data.created_at}</p>
+          <p className="text-sm font-mono text-muted-foreground">
+            {data.created_at}
+          </p>
         </>
       ) : (
-        <Error message='Nothing to show' />
+        <Error message="Nothing to show" />
       )}
     </div>
   )

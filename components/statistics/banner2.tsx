@@ -32,6 +32,7 @@ export default function Banner2({
   })
   const [error, setError] = useState<PostgrestError | null>(null)
   const [loading, setLoading] = useState(true)
+  const [nothing, setNothing] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -80,6 +81,8 @@ export default function Banner2({
           words: previousData?.words || 0,
           created_at: previousCreatedAt || pastDate.toLocaleString(),
         })
+      } else {
+        setNothing(true)
       }
       setLoading(false)
     }
@@ -93,6 +96,10 @@ export default function Banner2({
 
   if (error) {
     return <Error message={error.message} />
+  }
+
+  if (nothing) {
+    return <Error message="Nothing to show, wait a second" />
   }
 
   const blockIncrease = latestData.blocks - previousData.blocks
