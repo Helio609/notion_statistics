@@ -15,16 +15,16 @@ export default function Home() {
 
       <h2 className="text-3xl decoration-sky-500 underline">Banner</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="w-full flex">
+        <div className="w-full flex min-h-32 justify-center items-center">
           <Banner planId={planId} blockCnt />
         </div>
-        <div className="w-full flex">
+        <div className="w-full flex min-h-32 justify-center items-center">
           <Banner planId={planId} wordCnt />
         </div>
-        <div className="w-full flex">
+        <div className="w-full flex min-h-32 justify-center items-center">
           <Banner2 planId={planId} blockCnt daysAgo={1} />
         </div>
-        <div className="w-full flex">
+        <div className="w-full flex min-h-32 justify-center items-center">
           <Banner2 planId={planId} wordCnt daysAgo={1} />
         </div>
       </div>
