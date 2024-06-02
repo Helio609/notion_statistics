@@ -5,15 +5,15 @@ import PlanSelect from './plan-select'
 
 export default async function DashboardPage() {
   const supabase = createClient()
-  let { data } = await supabase.from('plans').select('id, root_id, notion_auth')
+  let { data } = await supabase
+    .from('plans')
+    .select('id, root_id, notion_auth, last_error')
 
   const notion = new Client({
     auth: data?.at(0)?.notion_auth,
   })
 
   let plans = []
-  let error = false
-  let message
 
   if (data) {
     for (let item of data) {
@@ -25,19 +25,21 @@ export default async function DashboardPage() {
               id: item.id,
               title: block['child_page']['title'],
               type: 'page',
+              error: item.last_error ? true : false,
+              message: item.last_error || undefined,
             })
           } else if ('child_database' in block) {
             plans.push({
               id: item.id,
               title: block['child_database']['title'],
               type: 'database',
+              error: item.last_error ? true : false,
+              message: item.last_error || undefined,
             })
           }
         }
       } catch (e) {
         if (isNotionClientError(e)) {
-          error = true
-          message = e.message
           plans.push({
             id: item.id,
             error: true,
