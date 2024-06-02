@@ -3,7 +3,6 @@
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -19,16 +18,29 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { createClient } from '@/utils/supabase/client'
-import { Loader2 } from 'lucide-react'
+import {
+  CircleX,
+  Database,
+  HelpCircle,
+  Loader2,
+  NotebookText,
+} from 'lucide-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { NewPlan } from './new-plan'
+import Link from 'next/link'
 
 export default function PlanSelect({
   data,
 }: {
-  data: { id: string; title?: string; error?: boolean; message?: string }[]
+  data: {
+    id: string
+    title?: string
+    error?: boolean
+    message?: string
+    type?: string
+  }[]
 }) {
   const [planId, setPlanId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -78,22 +90,49 @@ export default function PlanSelect({
   }
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex flex-col w-full sm:flex-row sm:space-y-0 sm:space-x-2 items-centers space-y-2">
       <Select
         onValueChange={(v) => setPlanId(v)}
         defaultValue={searchParams.get('planId')?.toString()}
       >
-        <SelectTrigger className="w-[320px]">
+        <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a Plan" />
         </SelectTrigger>
         <SelectContent>
           {data?.map((v) => (
             <SelectItem value={v.id} key={v.id}>
-              {v.title ?? v.id}
+              <div className="flex items-center space-x-2">
+                {!v.type ? (
+                  <CircleX className="w-4 h-4" />
+                ) : v.type == 'page' ? (
+                  <NotebookText className="w-4 h-4" />
+                ) : (
+                  <Database className="w-4 h-4" />
+                )}
+                <span className="truncate">{v.title ?? v.id}</span>
+              </div>
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
+
+      <div className="flex space-x-2">
+        {planId && (
+          <Button
+            variant="destructive"
+            disabled={loading}
+            onClick={() => handleDeletePlan(planId)}
+          >
+            {loading ? <Loader2 className="animate-spin" /> : 'Delete'}
+          </Button>
+        )}
+        <NewPlan />
+        <Link href="/help">
+          <Button variant="outline">
+            <HelpCircle className="w-5 h-5 animate-pulse" />
+          </Button>
+        </Link>
+      </div>
 
       <AlertDialog open={open} onOpenChange={(v) => setOpen(v)}>
         <AlertDialogContent>
@@ -106,17 +145,6 @@ export default function PlanSelect({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {planId && (
-        <Button
-          variant="destructive"
-          disabled={loading}
-          onClick={() => handleDeletePlan(planId)}
-        >
-          {loading ? <Loader2 className="animate-spin" /> : 'Delete'}
-        </Button>
-      )}
-      <NewPlan />
     </div>
   )
 }

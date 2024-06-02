@@ -82,7 +82,7 @@ export function NewPlan() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)}>Add new plan</Button>
+        <Button onClick={() => setOpen(true)}>New</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

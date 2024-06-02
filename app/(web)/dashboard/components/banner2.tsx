@@ -68,8 +68,8 @@ export default function DashboardBanner2({ planId }: { planId: string }) {
           </ToggleGroupItem>
         </ToggleGroup>
         <Input
-          placeholder="Days ago(default 1 day)"
-          className="w-56"
+          placeholder="1 day"
+          className='max-w-28'
           onBlur={(v) => setDaysAgo(Number(v.target.value) || 1)}
           type="number"
         />
