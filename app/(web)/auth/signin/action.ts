@@ -15,7 +15,7 @@ export async function signin(formData: FormData) {
   })
 
   if (error) {
-    redirect('/auth/error')
+    redirect(`/auth/error?message=${error.message}`)
   }
 
   revalidatePath('/', 'layout')
