@@ -8,7 +8,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
+  AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,7 +16,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from '@/components/ui/select'
 import { createClient } from '@/utils/supabase/client'
 import { Loader2 } from 'lucide-react'
@@ -27,15 +27,13 @@ import { NewPlan } from './new-plan'
 
 export default function PlanSelect({
   data,
-  error,
-  message,
 }: {
-  data: { id: string; title: string }[]
-  error: boolean
-  message?: string
+  data: { id: string; title?: string; error?: boolean; message?: string }[]
 }) {
   const [planId, setPlanId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState<string>()
+  const [open, setOpen] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -46,7 +44,13 @@ export default function PlanSelect({
     const params = new URLSearchParams()
     params.set('planId', planId)
     router.replace(`${pathname}?${params.toString()}`)
-  }, [planId, pathname, router])
+
+    let plan = data.find((v) => v.id == planId)
+    if (plan?.error) {
+      setMessage(plan.message)
+      setOpen(true)
+    }
+  }, [planId, pathname, router, data])
 
   useEffect(() => {
     setPlanId(searchParams.get('planId')?.toString() || null)
@@ -75,38 +79,33 @@ export default function PlanSelect({
 
   return (
     <div className="flex items-center space-x-2">
-      {!error && (
-        <Select
-          onValueChange={(v) => setPlanId(v)}
-          defaultValue={searchParams.get('planId')?.toString()}
-        >
-          <SelectTrigger className="w-[320px]">
-            <SelectValue placeholder="Select a Plan" />
-          </SelectTrigger>
-          <SelectContent>
-            {data?.map((v) => (
-              <SelectItem value={v.id} key={v.id}>
-                {v.title}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )}
-      {error && (
-        <AlertDialog defaultOpen>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Warning</AlertDialogTitle>
-              <AlertDialogDescription>
-                {message}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogAction>Continue</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      <Select
+        onValueChange={(v) => setPlanId(v)}
+        defaultValue={searchParams.get('planId')?.toString()}
+      >
+        <SelectTrigger className="w-[320px]">
+          <SelectValue placeholder="Select a Plan" />
+        </SelectTrigger>
+        <SelectContent>
+          {data?.map((v) => (
+            <SelectItem value={v.id} key={v.id}>
+              {v.title ?? v.id}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <AlertDialog open={open} onOpenChange={(v) => setOpen(v)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Error</AlertDialogTitle>
+            <AlertDialogDescription>{message}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {planId && (
         <Button
