@@ -127,7 +127,10 @@ export default function PlanSelect({
           </Button>
         )}
         <NewPlan />
-        <Link href="/help">
+        <Link
+          href="https://helio609.notion.site/Notion-Statistics-Docs-b587d628a1884aa1bc1f08de0d93d1f4"
+          target="_blank"
+        >
           <Button variant="outline">
             <HelpCircle className="w-5 h-5 animate-pulse" />
           </Button>
